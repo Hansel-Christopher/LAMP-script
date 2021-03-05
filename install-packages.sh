@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function install_stack(){    
-    db_password=$1
+    
     if [ "`lsb_release -is`" == "Ubuntu" ] || [ "`lsb_release -is`" == "Debian" ]
     then
         sudo apt update
@@ -19,7 +19,7 @@ function install_stack(){
         if dpkg-query -l mysql-server mysql-server; then
             printf "\n MySQL available already\n"
         else
-            db_password=$1
+            read -p "Enter mysql root password: " db_password
             export DEBIAN_FRONTEND="noninteractive"
             debconf-set-selections <<< "mysql-server mysql-server/root_password password $db_password"  
             debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $db_password"
@@ -101,8 +101,7 @@ option="${1}"
 
 case ${option} in 
    -i)  echo "Installing lamp stack"
-        read -p "Enter mysql root password: " db_root_password
-        install_stack "$db_root_password"
+        install_stack
       ;; 
 
    start) echo "Starting servers..."
